@@ -9,6 +9,11 @@ CFLAGS= -g -Wall -Wextra -Wno-unused-parameter -I.. -DHAVE_ASPRINTF
 CFLAGS+= -DHAVE_LIBREADLINE -DHAVE_READLINE_READLINE_H -DHAVE_READLINE_HISTORY -DHAVE_READLINE_HISTORY_H
 CFLAGS+= -D_GNU_SOURCE
 
+# Define if defining HAVE_LIBREADLINE and HAVE_LIBREADLINE_HISTORY unless
+# your environment doesn't support the TIOCGWINSZ ioctl call to get the
+# terminal width.
+CFLAGS+= -DHAVE_IOCTL
+
 # Comment out the following to suppress completion of certain kinds of
 # symbols.
 
