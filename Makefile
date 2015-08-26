@@ -1,50 +1,50 @@
-PREFIX=/usr/local
-BINDIR=${PREFIX}/bin
-LIBDIR=$(PREFIX)/lib/lua/5.2
+INST_PREFIX=/usr/local
+INST_BINDIR=${INST_PREFIX}/bin
+INST_LIBDIR=$(INST_PREFIX)/lib/lua/5.2
 
-LUA_CFLAGS=`pkg-config --cflags lua5.2`
-LUA_LDFLAGS=`pkg-config --libs lua5.2`
+ifndef CFLAGS
+	LUA_CFLAGS=`pkg-config --cflags lua5.2`
 
-CFLAGS= -g -Wall -Wextra -Wno-unused-parameter -I.. -DHAVE_ASPRINTF
-CFLAGS+= -DHAVE_LIBREADLINE -DHAVE_READLINE_READLINE_H -DHAVE_READLINE_HISTORY -DHAVE_READLINE_HISTORY_H
-CFLAGS+= -D_GNU_SOURCE
+	CFLAGS= -g -Wall -Wextra -Wno-unused-parameter -I.. -DHAVE_ASPRINTF
+	CFLAGS+= -DHAVE_LIBREADLINE -DHAVE_READLINE_READLINE_H -DHAVE_READLINE_HISTORY -DHAVE_READLINE_HISTORY_H
+	CFLAGS+= -D_GNU_SOURCE
 
 # Define if defining HAVE_LIBREADLINE and HAVE_LIBREADLINE_HISTORY unless
 # your environment doesn't support the TIOCGWINSZ ioctl call to get the
 # terminal width.
-CFLAGS+= -DHAVE_IOCTL
+	CFLAGS+= -DHAVE_IOCTL
 
 # Comment out the following to suppress completion of certain kinds of
 # symbols.
 
-CFLAGS+= -DCOMPLETE_KEYWORDS	# Keywords such as for, while, etc.
-CFLAGS+= -DCOMPLETE_MODULES     # Module names.
-CFLAGS+= -DCOMPLETE_TABLE_KEYS	# Table keys, including global variables.
-CFLAGS+= -DCOMPLETE_METATABLE_KEYS # Keys in the __index metafield, if
-                                   # it exists and is a table.
-CFLAGS+= -DCOMPLETE_FILE_NAMES	# File names.
+	CFLAGS+= -DCOMPLETE_KEYWORDS	# Keywords such as for, while, etc.
+	CFLAGS+= -DCOMPLETE_MODULES     # Module names.
+	CFLAGS+= -DCOMPLETE_TABLE_KEYS	# Table keys, including global variables.
+	CFLAGS+= -DCOMPLETE_METATABLE_KEYS # Keys in the __index metafield, if
+# it exists and is a table.
+	CFLAGS+= -DCOMPLETE_FILE_NAMES	# File names.
 
 # Comment out the following to disable tracking of results.  When
 # enabled each returned value, that is, each value the prompt prints
 # out, is also added to a table for future reference.
 
-CFLAGS+= '-DSAVE_RESULTS'
+	CFLAGS+= '-DSAVE_RESULTS'
 
 # The name of the table holding the results can be configured below.
 
-CFLAGS+= '-DRESULTS_TABLE_NAME="_"'
+	CFLAGS+= '-DRESULTS_TABLE_NAME="_"'
 
 # The table holding the results, can also be made to have weak values,
 # so as not to interfere with garbage collection.  To enable this
 # uncomment the second line below.
 
-# CFLAGS+= '-DWEAK_RESULTS'
+#	 CFLAGS+= '-DWEAK_RESULTS'
 
 # Uncomment the following line and customize the prefix as desired to
 # keep the auto-completer from considering certain table keys (and
 # hence global variables) for completion.
 
-# CFLAGS+= '-DHIDDEN_KEY_PREFIX="_"'
+#	 CFLAGS+= '-DHIDDEN_KEY_PREFIX="_"'
 
 # When completing certain kinds of values, such as tables or
 # functions, the completer also appends certain useful suffixes such
@@ -57,7 +57,7 @@ CFLAGS+= '-DRESULTS_TABLE_NAME="_"'
 # Uncomment the following line to make the completer always append
 # these suffixes.
 
-# CFLAGS+= -DALWAYS_APPEND_SUFFIXES
+#	 CFLAGS+= -DALWAYS_APPEND_SUFFIXES
 
 # The autocompleter can complete module names as if they were already
 # require'd and available as a global variable.  Once the module name
@@ -69,14 +69,19 @@ CFLAGS+= '-DRESULTS_TABLE_NAME="_"'
 # names will then only be completed inside strings (for use with
 # require).
 
-# CFLAGS+= -DNO_MODULE_LOAD
+#	 CFLAGS+= -DNO_MODULE_LOAD
 
 # Uncomment to make the auto-completer ask for confirmation before
 # loading a module.
 
-# CFLAGS+= -DCONFIRM_MODULE_LOAD
+#	 CFLAGS+= -DCONFIRM_MODULE_LOAD
+endif
 
-LDFLAGS=-lreadline -lhistory
+ifndef LDFLAGS
+	LUA_LDFLAGS=`pkg-config --libs lua5.2`
+
+	LDFLAGS=-lreadline -lhistory
+endif
 
 INSTALL=/usr/bin/install
 
@@ -95,11 +100,11 @@ dist: luap
 	cd /tmp; tar zcf luaprompt.tar.gz prompt/
 
 install: luap prompt.so
-	if [ -e luap ]; then $(INSTALL) -D luap $(BINDIR)/luap; fi
-	if [ -e prompt.so ]; then $(INSTALL) -D prompt.so $(LIBDIR)/prompt.so; fi
+	if [ -e luap ]; then $(INSTALL) -D luap $(INST_BINDIR)/luap; fi
+	if [ -e prompt.so ]; then $(INSTALL) -D prompt.so $(INST_LIBDIR)/prompt.so; fi
 
 uninstall:
-	rm -f $(BINDIR)/luap $(LIBDIR)/prompt.so
+	rm -f $(INST_BINDIR)/luap $(INST_LIBDIR)/prompt.so
 
 clean:
 	rm -f luap prompt.so *~
